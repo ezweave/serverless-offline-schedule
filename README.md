@@ -1,5 +1,7 @@
 # serverless-offline-schedule
 
+This is a fork of [`serverless-offline-schedule`](https://github.com/Meemaw/serverless-offline-schedule) as that project is no longer maintained.
+
 [![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)
 [![npm version](https://badge.fury.io/js/serverless-offline-schedule.svg)](https://badge.fury.io/js/serverless-offline-schedule)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

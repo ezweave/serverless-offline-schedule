@@ -1,5 +1,6 @@
 import schedule from 'node-schedule';
 import flatten from 'lodash.flatten';
+import { map } from 'lodash';
 
 import { convertExpressionToCron, slsInvokeFunction } from './utils';
 
@@ -15,7 +16,7 @@ type SchedulerConfig = {
 type FunctionConfiguration = {
   input: object;
   functionName: string;
-  cron: string;
+  cron: string[];
 };
 
 class OfflineScheduler {
@@ -36,17 +37,19 @@ class OfflineScheduler {
   public scheduleEvents = () => {
     const configurations = this.getFunctionConfigurations();
 
-    configurations.forEach(functionConfiguration => {
+    map(configurations, functionConfiguration => {
       const { functionName, cron, input } = functionConfiguration;
       this.log(`Scheduling [${functionName}] cron: [${cron}] input: ${JSON.stringify(input)}`);
 
-      schedule.scheduleJob(cron, () => {
-        try {
-          slsInvokeFunction(functionName, input);
-          this.log(`Succesfully invoked scheduled function: [${functionName}]`);
-        } catch (err) {
-          this.log(`Failed to execute scheduled function: [${functionName}] Error: ${err}`);
-        }
+      map(cron, c => {
+        schedule.scheduleJob(c, () => {
+          try {
+            slsInvokeFunction(functionName, input);
+            this.log(`Succesfully invoked scheduled function: [${functionName}]`);
+          } catch (err) {
+            this.log(`Failed to execute scheduled function: [${functionName}] Error: ${err}`);
+          }
+        });
       });
     });
   };
@@ -59,11 +62,13 @@ class OfflineScheduler {
       const { events } = functionConfig;
       const scheduleEvents = events.filter(event => event.hasOwnProperty('schedule'));
 
-      return scheduleEvents.map(event => {
+      return map(scheduleEvents, event => {
+        const { input = {}, rate: possibleRate } = event['schedule'];
+        const rate: string[] = Array.isArray(possibleRate) ? possibleRate : [possibleRate];
         return {
           functionName,
-          cron: convertExpressionToCron(event['schedule'].rate),
-          input: event['schedule'].input || {},
+          cron: map(rate, convertExpressionToCron),
+          input,
         };
       });
     });
