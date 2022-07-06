@@ -93,4 +93,23 @@ describe('OfflineScheduler', () => {
     );
     expect(scheduleJob).toBeCalledTimes(1);
   });
+
+  it('Should schedule job with multiple schedules', () => {
+    const log = jest.fn();
+    scheduleFunction['schedule-function'].events[0].schedule.rate = [
+      'rate(1 minute)',
+      'rate(2 minute)',
+    ];
+    const scheduleJob = jest.spyOn(schedule, 'scheduleJob');
+    const scheduler = new Scheduler({
+      log,
+      functionProvider: () => scheduleFunction,
+    });
+
+    scheduler.scheduleEvents();
+    expect(log).toBeCalledWith(
+      'Scheduling [schedule-function] cron: [*/1 * * * *,*/2 * * * *] input: {"scheduler":"1-minute"}'
+    );
+    expect(scheduleJob).toBeCalledTimes(2);
+  });
 });
