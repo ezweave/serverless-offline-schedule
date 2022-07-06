@@ -38,5 +38,5 @@ export const slsInvokeFunction = (name: string, input: object): Buffer => {
   return childProcess.execSync(
     `serverless invoke local --function ${name} --data '${JSON.stringify(input)}'`,
     { cwd: './', stdio: 'inherit' }
-  );
+  ) as Buffer;
 };
