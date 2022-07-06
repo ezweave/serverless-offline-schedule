@@ -12,7 +12,7 @@
     "build": "rimraf dist && tsc -p tsconfig.build.json",
     "test": "jest",
     "test:coveralls": "jest --coverage --runInBand && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage",
-    "lint": "concurrently \"npm run prettier\" \"npm run eslint\"",
+    "lint": "concurrently \"yarn run prettier\" \"yarn run eslint\"",
     "lint:fix": "eslint --max-warnings 0 --ext .ts 'src/**/*' --fix",
     "prettier": "prettier -l 'src/**/*'",
     "eslint": "eslint --max-warnings 0 --ext .ts 'src/**/*'",

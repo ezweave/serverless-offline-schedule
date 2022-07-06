@@ -3,6 +3,26 @@ import schedule from 'node-schedule';
 import Scheduler from '../src/scheduler';
 
 describe('OfflineScheduler', () => {
+  let scheduleFunction;
+
+  beforeEach(() => {
+    scheduleFunction = {
+      'schedule-function': {
+        handler: 'src/functions/schedule-function.handler',
+        events: [
+          {
+            schedule: {
+              name: '1-minute',
+              rate: 'rate(1 minute)',
+              input: { scheduler: '1-minute' },
+            },
+          },
+        ],
+        name: 'my-service-dev-schedule-function',
+      },
+    };
+  });
+
   afterEach(() => {
     jest.restoreAllMocks();
   });
@@ -38,22 +58,6 @@ describe('OfflineScheduler', () => {
     scheduler.scheduleEvents();
     expect(log).toBeCalledTimes(0);
   });
-
-  const scheduleFunction = {
-    'schedule-function': {
-      handler: 'src/functions/schedule-function.handler',
-      events: [
-        {
-          schedule: {
-            name: '1-minute',
-            rate: 'rate(1 minute)',
-            input: { scheduler: '1-minute' },
-          },
-        },
-      ],
-      name: 'my-service-dev-schedule-function',
-    },
-  };
 
   it('Should schedule job when function with schedule provided', () => {
     const log = jest.fn();
