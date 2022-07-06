@@ -1,5 +1,5 @@
 {
-  "name": "serverless-offline-schedule",
+  "name": "@ezweave/serverless-offline-schedule",
   "version": "1.0.0",
   "license": "MIT",
   "main": "dist/src/index.js",
@@ -16,7 +16,8 @@
     "lint:fix": "eslint --max-warnings 0 --ext .ts 'src/**/*' --fix",
     "prettier": "prettier -l 'src/**/*'",
     "eslint": "eslint --max-warnings 0 --ext .ts 'src/**/*'",
-    "dev:schedule": "ts-node scripts/schedule.ts"
+    "dev:schedule": "ts-node scripts/schedule.ts",
+    "prepublish": "yarn run build"
   },
   "keywords": [
     "serverless",
