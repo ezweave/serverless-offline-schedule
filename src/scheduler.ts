@@ -42,13 +42,15 @@ class OfflineScheduler {
       this.log(`Scheduling [${functionName}] cron: [${cron}] input: ${JSON.stringify(input)}`);
 
       map(cron, (cronJob: string) => {
-        schedule.scheduleJob(cronJob, () => {
+        schedule.scheduleJob(cronJob, (fireDate: Date) => {
           try {
-            this.log(`Attempting to invoke scheduled function: [${functionName}]`);
+            this.log(`Attempting to invoke scheduled function: [${functionName}] on ${fireDate}`);
             slsInvokeFunction(functionName, input);
-            this.log(`Succesfully invoked scheduled function: [${functionName}]`);
+            this.log(`Succesfully invoked scheduled function: [${functionName}] on ${fireDate}`);
           } catch (err) {
-            this.log(`Failed to execute scheduled function: [${functionName}] Error: ${err}`);
+            this.log(
+              `Failed to execute scheduled function: [${functionName}] Error: ${err} on ${fireDate}`
+            );
           }
         });
       });
