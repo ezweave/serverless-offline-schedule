@@ -37,13 +37,14 @@ class OfflineScheduler {
   public scheduleEvents = () => {
     const configurations = this.getFunctionConfigurations();
 
-    map(configurations, functionConfiguration => {
+    map(configurations, (functionConfiguration: FunctionConfiguration) => {
       const { functionName, cron, input } = functionConfiguration;
       this.log(`Scheduling [${functionName}] cron: [${cron}] input: ${JSON.stringify(input)}`);
 
-      map(cron, c => {
-        schedule.scheduleJob(c, () => {
+      map(cron, (cronJob: string) => {
+        schedule.scheduleJob(cronJob, () => {
           try {
+            this.log(`Attempting to invoke scheduled function: [${functionName}]`);
             slsInvokeFunction(functionName, input);
             this.log(`Succesfully invoked scheduled function: [${functionName}]`);
           } catch (err) {
